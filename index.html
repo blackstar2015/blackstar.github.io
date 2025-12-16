@@ -1,0 +1,751 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pradeep Pillai - Technical Designer Portfolio</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .8;
+            }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-25%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+                                              const { useState } = React;
+
+                                              // Lucide icons as React components (simplified)
+                                              const Menu = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
+                                              const X = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
+                                              const Github = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>;
+                                              const Linkedin = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>;
+                                              const Mail = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>;
+                                              const Phone = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
+                                              const ExternalLink = ({size = 24}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>;
+                                              const ChevronDown = () => <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>;
+
+                                              const Portfolio = () => {
+                                                const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+                                                const [activeSection, setActiveSection] = useState('home');
+                                                const [selectedProject, setSelectedProject] = useState(null);
+                                                const [modalOpen, setModalOpen] = useState(false);
+                                                const [imageCache, setImageCache] = useState({});
+
+                                                const loadImage = async (url) => {
+                                                  if (imageCache[url]) return imageCache[url];
+
+                                                  try {
+                                                    const response = await fetch(url);
+                                                    const blob = await response.blob();
+                                                    const dataUrl = await new Promise((resolve) => {
+                                                      const reader = new FileReader();
+                                                      reader.onloadend = () => resolve(reader.result);
+                                                      reader.readAsDataURL(blob);
+                                                    });
+                                                    setImageCache(prev => ({ ...prev, [url]: dataUrl }));
+                                                    return dataUrl;
+                                                  } catch (error) {
+                                                    console.error('Failed to load image:', url, error);
+                                                    return null;
+                                                  }
+                                                };
+
+                                                const openModal = async (project) => {
+                                                  setSelectedProject(project);
+                                                  setModalOpen(true);
+                                                  document.body.style.overflow = 'hidden';
+
+                                                  if (project.heroImage) await loadImage(project.heroImage);
+                                                  if (project.gallery) {
+                                                    for (const img of project.gallery) {
+                                                      await loadImage(img);
+                                                    }
+                                                  }
+                                                };
+
+                                                const closeModal = () => {
+                                                  setModalOpen(false);
+                                                  document.body.style.overflow = 'unset';
+                                                  setTimeout(() => setSelectedProject(null), 300);
+                                                };
+                                              const projects = [
+                                          {
+                                            title: "Attack of the Toys!",
+                                            company: "Quiver Games",
+                                            role: "Technical Designer",
+                                            period: "June 2024 – August 2024",
+                                            tech: ["Unity", "C#", "FMOD", "WebGL"],
+                                            highlights: [
+                                              "Implemented FPS gameplay with hitscan and projectile weapons",
+                                              "Designed 3 enemy types and 3 tower types with unique interactions",
+                                              "Created UI systems and managed WebGL builds"
+                                            ],
+                                            type: "Technical Design",
+                                            link: "https://blackstar-2015.itch.io/attack-of-the-toys",
+                                            description: "A tower defense FPS hybrid where players defend against waves of toy enemies.",
+                                            detailedContributions: [
+                                              "Implemented core FPS gameplay features including hitscan and projectile weapons with charge/cooldown mechanics",
+                                              "Designed and balanced three distinct enemy types with unique behaviors and attack patterns",
+                                              "Created three tower types with complementary mechanics and strategic interactions",
+                                              "Designed and scripted complete UI system including HUD, tooltips, and menu flows",
+                                              "Managed Unity project structure, scenes, prefabs, and WebGL export for multi-platform builds",
+                                              "Integrated FMOD audio assets for dynamic game audio implementation",
+                                              "Used Git feature branches and merge workflows for team collaboration"
+                                            ],
+                                            heroImage: "https://i.imgur.com/Xs1dUpk.png",
+                                            gallery: [
+                                              "https://i.imgur.com/HNSjE2R.png",
+                                              "https://i.imgur.com/D0Wv7Dz.png",
+                                              "https://i.imgur.com/VQcXNde.png",
+                                              "https://i.imgur.com/HcE654E.png",
+                                              "https://i.imgur.com/9ZLEIF7.png"
+                                            ]
+                                          },
+                                          {
+                                            title: "Three Curse Meal",
+                                            company: "Fever Dreams",
+                                            role: "Technical Designer/AI Programmer",
+                                            period: "January 2022 – April 2022",
+                                            tech: ["Unity", "C#", "NavMesh", "FMOD", "Git"],
+                                            highlights: [
+                                              "Implemented complex AI systems for multiple enemy types",
+                                              "Developed multi-room dungeon levels with lighting and encounters",
+                                              "Built gameplay systems including loot, traps, and checkpoints"
+                                            ],
+                                            type: "AI & Level Design",
+                                            link: "https://blackstar-2015.itch.io/three-curse-meal",
+                                            description: "A dungeon crawler action game featuring dynamic AI enemies and challenging multi-room encounters.",
+                                            detailedContributions: [
+                                              "Implemented complex AI systems for melee, ranged, and suicide enemy types with pathfinding and attack logic",
+                                              "Developed stagger/knockback systems, detection mechanics, and respawn behavior for enemies",
+                                              "Created large multi-room dungeon levels including whiteboxing, set dressing, and prop placement",
+                                              "Designed and scripted encounter systems, lighting setups, and collider configurations",
+                                              "Solved persistent NavMesh issues by rebuilding meshes, adding obstacles, and enforcing room boundaries",
+                                              "Built gameplay systems: loot chests, traps, breakable floors, checkpoints, and respawn logic",
+                                              "Integrated FMOD audio events for enemies and gameplay, resolving build-level audio bugs",
+                                              "Reworked combat animations, transitions, and state machines to improve responsiveness"
+                                            ],
+                                            heroImage: "https://i.imgur.com/jmFxItX.png",
+                                            gallery: [
+                                              "https://i.imgur.com/0hk45Py.png",
+                                              "https://i.imgur.com/PpfggG2.png",
+                                              "https://i.imgur.com/f7xtals.png",
+                                              "https://i.imgur.com/Fr0aGVD.png"
+                                            ]
+                                          }
+                                        ];
+
+                                        const personalProjects = [
+                                          {
+                                            title: "Aura",
+                                            type: "Personal Project",
+                                            period: "November 2024 – July 2025",
+                                            tech: ["Unreal Engine 5", "C++", "Gameplay Ability System"],
+                                            highlights: [
+                                              "Completed comprehensive GAS tutorial demonstrating C++ programming in Unreal Engine",
+                                              "Implemented RPG systems including attributes, gameplay effects, and ability tags",
+                                              "Built top-down dungeon crawler with complex combat and AI systems across 200+ commits"
+                                            ],
+                                            link: "https://github.com/blackstar2015/GAS_Aura",
+                                            itchLink: "https://blackstar-2015.itch.io/aura",
+                                            description: "A top-down RPG demonstrating mastery of Unreal Engine's Gameplay Ability System with spell casting, leveling, and character progression.",
+                                            detailedContributions: [
+                                              "Implemented spell casting system with upgradeable abilities (multiple firebolt projectiles, increased electrocute chain targets)",
+                                              "Created character progression system with primary attributes affecting secondary attributes (critical chance, resistances)",
+                                              "Developed 5 unique enemy types with distinct behaviors, attributes, and abilities",
+                                              "Built flexible ability balancing system for easy tuning of cost and damage values",
+                                              "Designed modular character creation system allowing quick assignment of starting abilities",
+                                              "Implemented attribute system with configurable relationships between attributes",
+                                              "Architected robust MVC pattern with separated UI controllers, player controller, and player states"
+                                            ],
+                                            heroImage: "https://img.itch.zone/aW1nLzIxMzEwNDU0LnBuZw==/original/7zXEkn.png",
+                                            gallery: [
+                                              "https://img.itch.zone/aW1nLzIxMjg1NDQ4LnBuZw==/original/um3yoM.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NDc1LnBuZw==/original/RSG65x.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NTEwLnBuZw==/original/T8BCI1.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NTI1LnBuZw==/original/jfgKmr.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NTc1LnBuZw==/original/N2N604.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NTgwLnBuZw==/original/Vf9%2Bav.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NjA1LnBuZw==/original/1tJFDB.png",
+                                              "https://img.itch.zone/aW1nLzIxMjg1NjE2LnBuZw==/original/gfBwWq.png"
+                                            ]
+                                          },
+                                          {
+                                            title: "Poppy Runner",
+                                            type: "Game Jam - 'Flower Power' Theme",
+                                            period: "March 2023",
+                                            tech: ["Unity", "C#"],
+                                            highlights: [
+                                              "Programmer and Project Manager for 48-hour game jam",
+                                              "Implemented player controller, movement, and attack systems",
+                                              "Set up NPC objectives and animation integration in engine"
+                                            ],
+                                            link: "https://6-foot-scale-people.itch.io/poppy-runner",
+                                            description: "A fast-paced runner game created during a 48-hour game jam with 'Flower Power' theme.",
+                                            detailedContributions: [
+                                              "Served as Programmer and Project Manager, coordinating team efforts within 48-hour time constraint",
+                                              "Implemented complete player controller with responsive movement and attack mechanics",
+                                              "Created NPC objective system with quest tracking and completion triggers",
+                                              "Set up animation system in Unity, integrating animator controllers and state machines",
+                                              "Managed project scope and timeline to deliver polished game within jam deadline"
+                                            ],
+                                            heroImage: "https://i.imgur.com/JIeuh30.jpeg",
+                                            gallery: [
+                                              "https://i.imgur.com/aLEbUKO.png",
+                                              "https://i.imgur.com/isR0UHy.png",
+                                              "https://i.imgur.com/bbn5aO2.png",
+                                              "https://i.imgur.com/4iROkrT.png",
+                                              "https://i.imgur.com/2wHKQat.png"
+                                            ]
+                                          },
+                                          {
+                                            title: "Sweet Specter",
+                                            type: "Game Jam - 'Trick or Treat' Theme",
+                                            period: "October 2022",
+                                            tech: ["Unreal Engine"],
+                                            highlights: [
+                                              "Designed and built level layout with light-based obstacles for 48-hour jam",
+                                              "Scripted realtime lighting system traveling through library with color-changing mechanics",
+                                              "Implemented candy collection system changing player color and damage system based on light/color matching"
+                                            ],
+                                            link: "https://blackstar-2015.itch.io/sweet-specter",
+                                            description: "A puzzle stealth game where players navigate a haunted library using color-changing mechanics to avoid detection.",
+                                            detailedContributions: [
+                                              "Designed complete level layout with strategic light-based obstacles and safe zones",
+                                              "Scripted dynamic realtime lighting system that travels through the library environment",
+                                              "Implemented color-changing lighting mechanics with multiple color states",
+                                              "Created candy collection system that changes the player ghost's color on pickup",
+                                              "Developed damage system where player takes damage when standing in light of mismatched color",
+                                              "Balanced level design to create compelling stealth puzzle gameplay within 48-hour constraint"
+                                            ],
+                                            heroImage: "https://i.imgur.com/dy1fJVn.png",
+                                            gallery: [
+                                              "https://i.imgur.com/claZXq1.mp4",
+                                              "https://i.imgur.com/88iVHkE.gif",
+                                              "https://i.imgur.com/VRbDpCP.gif"
+                                            ]
+                                          }
+                                        ];
+
+                                        const skills = {
+                                          "Game Design": ["Systems Design", "Combat Design", "Level Design", "AI Design", "Progression Design", "Mechanics Balancing"],
+                                          "Programming": ["C#", "C++", "Visual Scripting", "Blueprints"],
+                                          "Tools & Tech": ["Unity Engine", "Unreal Engine 5", "Git/GitHub", "FMOD", "Jira", "Miro"],
+                                          "Workflow": ["Prototyping", "Design Documentation", "Technical QA", "Source Control", "Problem Solving"]
+                                        };
+
+                                        const ScrollToSection = (sectionId) => {
+                                          setActiveSection(sectionId);
+                                          setMobileMenuOpen(false);
+                                          document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+                                        };
+
+                                        return (
+                                          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+                                            <nav className="fixed w-full bg-slate-900/90 backdrop-blur-sm z-50 border-b border-purple-500/20">
+                                              <div className="max-w-6xl mx-auto px-6 py-4">
+                                                <div className="flex justify-between items-center">
+                                                  <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                                                    Pradeep Pillai
+                                                  </h1>
+
+                                                  <div className="hidden md:flex gap-8">
+                                                    {['home', 'about', 'projects', 'personal', 'skills', 'contact'].map((section) => (
+                                                      <button
+                                                        key={section}
+                                                        onClick={() => ScrollToSection(section)}
+                                                        className={`capitalize hover:text-purple-400 transition-colors ${
+                                                          activeSection === section ? 'text-purple-400' : ''
+                                                        }`}
+                                                      >
+                                                        {section === 'personal' ? 'Game Jams' : section}
+                                                      </button>
+                                                    ))}
+                                                  </div>
+
+                                                  <button
+                                                    className="md:hidden"
+                                                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                                  >
+                                                    {mobileMenuOpen ? <X /> : <Menu />}
+                                                  </button>
+                                                </div>
+
+                                                {mobileMenuOpen && (
+                                                  <div className="md:hidden mt-4 pb-4 flex flex-col gap-4">
+                                                    {['home', 'about', 'projects', 'personal', 'skills', 'contact'].map((section) => (
+                                                      <button
+                                                        key={section}
+                                                        onClick={() => ScrollToSection(section)}
+                                                        className="capitalize text-left hover:text-purple-400 transition-colors"
+                                                      >
+                                                        {section === 'personal' ? 'Game Jams' : section}
+                                                      </button>
+                                                    ))}
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </nav>
+
+                                            <section id="home" className="min-h-screen flex items-center justify-center px-6 pt-20">
+                                              <div className="max-w-4xl text-center">
+                                                <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
+                                                  Technical Designer
+                                                </h2>
+                                                <p className="text-xl md:text-2xl text-gray-300 mb-8">
+                                                  Unity/C# Expert | Gameplay Programmer | Systems Designer
+                                                </p>
+                                                <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
+                                                  3+ years of experience building game systems, AI, and polished gameplay experiences.
+                                                  Specializing in technical design, prototyping, and cross-functional collaboration.
+                                                </p>
+                                                <div className="flex gap-4 justify-center flex-wrap">
+                                                  <button
+                                                    onClick={() => ScrollToSection('projects')}
+                                                    className="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-colors"
+                                                  >
+                                                    View Projects
+                                                  </button>
+                                                  <button
+                                                    onClick={() => ScrollToSection('contact')}
+                                                    className="px-8 py-3 bg-transparent border-2 border-purple-400 hover:bg-purple-400/10 rounded-lg font-semibold transition-colors"
+                                                  >
+                                                    Get In Touch
+                                                  </button>
+                                                </div>
+                                                <ChevronDown className="mx-auto mt-16 animate-bounce text-purple-400" />
+                                              </div>
+                                            </section>
+
+                                            <section id="about" className="py-20 px-6">
+                                              <div className="max-w-4xl mx-auto">
+                                                <h3 className="text-4xl font-bold mb-8 text-center">About Me</h3>
+                                                <div className="bg-slate-800/50 backdrop-blur rounded-xl p-8 border border-purple-500/20">
+                                                  <p className="text-lg text-gray-300 mb-6">
+                                                    I'm a Technical Designer with expertise in Unity/C# development, specializing in creating
+                                                    gameplay systems, AI behaviors, and polished player experiences. My background spans technical
+                                                    QA, gameplay programming, and level design.
+                                                  </p>
+                                                  <p className="text-lg text-gray-300 mb-6">
+                                                    I've worked on diverse projects ranging from AI programming and level design to gameplay systems
+                                                    and technical implementation, always focusing on creating polished, player-centric experiences.
+                                                  </p>
+                                                  <div className="grid md:grid-cols-3 gap-6 mt-8">
+                                                    <div className="text-center p-4 bg-purple-900/30 rounded-lg">
+                                                      <div className="text-3xl font-bold text-purple-400 mb-2">3+</div>
+                                                      <div className="text-gray-400">Years Experience</div>
+                                                    </div>
+                                                    <div className="text-center p-4 bg-purple-900/30 rounded-lg">
+                                                      <div className="text-3xl font-bold text-purple-400 mb-2">200+</div>
+                                                      <div className="text-gray-400">Git Commits</div>
+                                                    </div>
+                                                    <div className="text-center p-4 bg-purple-900/30 rounded-lg">
+                                                      <div className="text-3xl font-bold text-purple-400 mb-2">5</div>
+                                                      <div className="text-gray-400">Total Projects</div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </section>
+
+                                            <section id="projects" className="py-20 px-6 bg-slate-900/50">
+                                              <div className="max-w-6xl mx-auto">
+                                                <h3 className="text-4xl font-bold mb-12 text-center">Professional Projects</h3>
+                                                <div className="grid md:grid-cols-2 gap-8">
+                                                  {projects.map((project, index) => (
+                                                    <div
+                                                      key={index}
+                                                      onClick={() => openModal(project)}
+                                                      className="bg-slate-800/50 backdrop-blur rounded-xl p-6 border border-purple-500/20 hover:border-purple-500/40 transition-all hover:transform hover:scale-105 cursor-pointer"
+                                                    >
+                                                      <div className="flex justify-between items-start mb-4">
+                                                        <div>
+                                                          <h4 className="text-2xl font-bold text-purple-400 mb-1">{project.title}</h4>
+                                                          <p className="text-gray-400">{project.company}</p>
+                                                        </div>
+                                                        <span className="text-xs bg-purple-600 px-3 py-1 rounded-full">{project.type}</span>
+                                                      </div>
+                                                      <p className="text-sm text-gray-500 mb-4">{project.role} • {project.period}</p>
+
+                                                      <div className="flex flex-wrap gap-2 mb-4">
+                                                        {project.tech.map((tech, i) => (
+                                                          <span key={i} className="text-xs bg-slate-700 px-3 py-1 rounded-full">
+                                                            {tech}
+                                                          </span>
+                                                        ))}
+                                                      </div>
+
+                                                      <ul className="space-y-2">
+                                                        {project.highlights.map((highlight, i) => (
+                                                          <li key={i} className="text-sm text-gray-300 flex items-start">
+                                                            <span className="text-purple-400 mr-2">▹</span>
+                                                            <span>{highlight}</span>
+                                                          </li>
+                                                        ))}
+                                                      </ul>
+
+                                                      <div className="mt-4 flex gap-3">
+                                                        {project.link && (
+                <a
+                                                            href={project.link}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300"
+                                                          >
+                                                            Play on itch.io <ExternalLink size={14} />
+                                                          </a>
+                                                        )}
+                                                        <button
+                                                          onClick={() => openModal(project)}
+                                                          className="text-sm text-purple-400 hover:text-purple-300"
+                                                        >
+                                                          View Details →
+                                                        </button>
+                                                      </div>
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            </section>
+
+                                            <section id="personal" className="py-20 px-6">
+                                              <div className="max-w-6xl mx-auto">
+                                                <h3 className="text-4xl font-bold mb-4 text-center">Game Jams & Personal Projects</h3>
+                                                <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+                                                  Exploring new technologies and rapid prototyping through personal development and game jams
+                                                </p>
+                                                <div className="grid md:grid-cols-3 gap-8">
+                                                  {personalProjects.map((project, index) => (
+                                                    <div
+                                                      key={index}
+                                                      onClick={() => openModal(project)}
+                                                      className="bg-slate-800/50 backdrop-blur rounded-xl p-6 border border-pink-500/20 hover:border-pink-500/40 transition-all hover:transform hover:scale-105 cursor-pointer"
+                                                    >
+                                                      <div className="flex justify-between items-start mb-4">
+                                                        <div>
+                                                          <h4 className="text-xl font-bold text-pink-400 mb-1">{project.title}</h4>
+                                                          <p className="text-sm text-gray-400">{project.type}</p>
+                                                        </div>
+                                                        {project.link && (
+        <a
+                                                            href={project.link}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-pink-400 hover:text-pink-300"
+                                                          >
+                                                            <ExternalLink size={20} />
+                                                          </a>
+                                                        )}
+                                                      </div>
+                                                      <p className="text-xs text-gray-500 mb-4">{project.period}</p>
+
+                                                      <div className="flex flex-wrap gap-2 mb-4">
+                                                        {project.tech.map((tech, i) => (
+                                                          <span key={i} className="text-xs bg-slate-700 px-3 py-1 rounded-full">
+                                                            {tech}
+                                                          </span>
+                                                        ))}
+                                                      </div>
+
+                                                      <ul className="space-y-2">
+                                                        {project.highlights.map((highlight, i) => (
+                                                          <li key={i} className="text-sm text-gray-300 flex items-start">
+                                                            <span className="text-pink-400 mr-2">▹</span>
+                                                            <span>{highlight}</span>
+                                                          </li>
+                                                        ))}
+                                                      </ul>
+
+                                                      <div className="mt-4 flex gap-3">
+                                                        {project.link && (
+        <a
+                                                            href={project.link}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="inline-flex items-center gap-2 text-sm text-pink-400 hover:text-pink-300"
+                                                          >
+                                                            {project.title === "Aura" ? "View project on GitHub" : "Play on itch.io"} <ExternalLink size={14} />
+                                                          </a>
+                                                        )}
+                                                        <button
+                                                          onClick={() => openModal(project)}
+                                                          className="text-sm text-pink-400 hover:text-pink-300"
+                                                        >
+                                                          View Details →
+                                                        </button>
+                                                      </div>
+                                                    </div>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            </section>
+
+                                            <section id="skills" className="py-20 px-6">
+                                              <div className="max-w-6xl mx-auto">
+                                                <h3 className="text-4xl font-bold mb-12 text-center">Skills & Expertise</h3>
+                                                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                                  {Object.entries(skills).map(([category, skillList], index) => (
+                                                    <div
+                                                      key={index}
+                                                      className="bg-slate-800/50 backdrop-blur rounded-xl p-6 border border-purple-500/20"
+                                                    >
+                                                      <h4 className="text-xl font-bold text-purple-400 mb-4">{category}</h4>
+                                                      <ul className="space-y-2">
+                                                        {skillList.map((skill, i) => (
+                                                          <li key={i} className="text-gray-300 text-sm flex items-center">
+                                                            <span className="text-purple-400 mr-2">•</span>
+                                                            {skill}
+                                                          </li>
+                                                        ))}
+                                                      </ul>
+                                                    </div>
+                                                  ))}
+                                                </div>
+
+                                                <div className="mt-12 bg-slate-800/50 backdrop-blur rounded-xl p-8 border border-purple-500/20">
+                                                  <h4 className="text-2xl font-bold text-center mb-6">Additional Experience</h4>
+                                                  <div className="text-center text-gray-300">
+                                                    <p className="mb-4">
+                                                      <span className="font-semibold text-purple-400">Unity/C# Teaching Assistant</span> at Vancouver Film School
+                                                    </p>
+                                                    <p className="text-sm text-gray-400">
+                                                      Mentoring students in Unity development, debugging, and game design principles since July 2022
+                                                    </p>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </section>
+
+                                            <section id="contact" className="py-20 px-6 bg-slate-900/50">
+                                              <div className="max-w-4xl mx-auto text-center">
+                                                <h3 className="text-4xl font-bold mb-8">Let's Connect</h3>
+                                                <p className="text-xl text-gray-300 mb-12">
+                                                  I'm currently open to Technical Designer, Game Designer, Level Designer, and Gameplay Programmer opportunities.
+                                                </p>
+
+                                                <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                <a
+                                                    href="mailto:ppillai05@gmail.com"
+                                                    className="flex items-center justify-center gap-3 bg-purple-600 hover:bg-purple-700 px-6 py-4 rounded-lg transition-colors"
+                                                  >
+                                                    <Mail />
+                                                    <span>ppillai05@gmail.com</span>
+                                                  </a>
+                <a
+                                                    href="tel:+16047009588"
+                                                    className="flex items-center justify-center gap-3 bg-purple-600 hover:bg-purple-700 px-6 py-4 rounded-lg transition-colors"
+                                                  >
+                                                    <Phone />
+                                                    <span>(604) 700-9588</span>
+                                                  </a>
+                                                </div>
+
+                                                <div className="flex gap-6 justify-center mt-8">
+        <a
+                                                    href="https://linkedin.com/in/pradeep-pillai"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 text-gray-300 hover:text-purple-400 transition-colors"
+                                                  >
+                                                    <Linkedin />
+                                                    <span>LinkedIn</span>
+                                                  </a>
+        <a
+                                                    href="https://github.com/blackstar2015"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 text-gray-300 hover:text-purple-400 transition-colors"
+                                                  >
+                                                    <Github />
+                                                    <span>Github</span>
+                                                  </a>
+                                                </div>
+
+                                                <div className="mt-12 text-gray-400">
+                                                  <p>Based in Vancouver, BC</p>
+                                                </div>
+                                              </div>
+                                            </section>
+
+                                            <footer className="py-8 text-center text-gray-500 border-t border-purple-500/20">
+                                              <p>© 2025 Pradeep Pillai. Built with React.</p>
+                                            </footer>
+
+                                            {modalOpen && selectedProject && (
+                                              <div
+                                                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto"
+                                                onClick={closeModal}
+                                              >
+                                                <div
+                                                  className="bg-slate-900 rounded-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto border border-purple-500/30 my-8"
+                                                  onClick={(e) => e.stopPropagation()}
+                                                >
+                                                  <div className="sticky top-0 bg-slate-900 border-b border-purple-500/20 p-6 flex justify-between items-start z-10">
+                                                    <div>
+                                                      <h3 className="text-3xl font-bold text-purple-400 mb-2">{selectedProject.title}</h3>
+                                                      <p className="text-gray-400">{selectedProject.company || selectedProject.type}</p>
+                                                      <p className="text-sm text-gray-500 mt-1">{selectedProject.role || selectedProject.period}</p>
+                                                    </div>
+                                                    <button
+                                                      onClick={closeModal}
+                                                      className="text-gray-400 hover:text-white transition-colors"
+                                                    >
+                                                      <X />
+                                                    </button>
+                                                  </div>
+
+                                                  <div className="p-6 space-y-6">
+                                                    <div>
+                                                      <p className="text-lg text-gray-300">{selectedProject.description}</p>
+                                                      <p className="text-sm text-gray-500 mt-2">{selectedProject.period}</p>
+                                                    </div>
+
+                                                    <div>
+                                                      <h4 className="text-xl font-bold text-purple-400 mb-3">Technologies Used</h4>
+                                                      <div className="flex flex-wrap gap-2">
+                                                        {selectedProject.tech.map((tech, i) => (
+                                                          <span key={i} className="bg-slate-800 px-4 py-2 rounded-full text-sm">
+                                                            {tech}
+                                                          </span>
+                                                        ))}
+                                                      </div>
+                                                    </div>
+
+                                                    {selectedProject.heroImage && (
+                                                      <div>
+                                                        <h4 className="text-xl font-bold text-purple-400 mb-3">Preview</h4>
+                                                        <img
+                                                          src={imageCache[selectedProject.heroImage] || selectedProject.heroImage}
+                                                          alt={`${selectedProject.title} preview`}
+                                                          className="w-full rounded-lg border border-purple-500/20"
+                                                        />
+                                                      </div>
+                                                    )}
+
+                                                    {selectedProject.detailedContributions && (
+                                                      <div>
+                                                        <h4 className="text-xl font-bold text-purple-400 mb-3">My Contributions</h4>
+                                                        <ul className="space-y-3">
+                                                          {selectedProject.detailedContributions.map((contribution, i) => (
+                                                            <li key={i} className="text-gray-300 flex items-start">
+                                                              <span className="text-purple-400 mr-3 mt-1">▹</span>
+                                                              <span>{contribution}</span>
+                                                            </li>
+                                                          ))}
+                                                        </ul>
+                                                      </div>
+                                                    )}
+
+                                                    {selectedProject.gallery && selectedProject.gallery.length > 0 && (
+                                                      <div>
+                                                        <h4 className="text-xl font-bold text-purple-400 mb-3">Gallery</h4>
+                                                        <div className="grid md:grid-cols-2 gap-4">
+                                                          {selectedProject.gallery.map((media, i) => {
+                                                            const isVideo = media.endsWith('.mp4') || media.endsWith('.webm');
+                                                            return isVideo ? (
+                                                              <video
+                                                                key={i}
+                                                                src={imageCache[media] || media}
+                                                                controls
+                                                                loop
+                                                                muted
+                                                                autoPlay
+                                                                className="w-full rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors"
+                                                              />
+                                                            ) : (
+                                                              <img
+                                                                key={i}
+                                                                src={imageCache[media] || media}
+                                                                alt={`${selectedProject.title} screenshot ${i + 1}`}
+                                                                className="w-full rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors"
+                                                              />
+                                                            );
+                                                          })}
+                                                        </div>
+                                                      </div>
+                                                    )}
+
+                <div className="flex gap-4 pt-4 flex-wrap">
+                                {selectedProject.link && (
+                <a
+                                    href={selectedProject.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                                              >
+                                                {selectedProject.title === "Aura" ? "View on GitHub" : "Play on itch.io"}
+                                                <ExternalLink size={18} />
+                                              </a>
+                                            )}
+                                            {selectedProject.itchLink && (
+        <a
+                                                href={selectedProject.itchLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                                              >
+                                                View on itch.io
+                                                <ExternalLink size={18} />
+                                              </a>
+                                            )}
+                                            <button
+                                              onClick={closeModal}
+                                              className="px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition-colors"
+                                            >
+                                              Close
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                );
+                        };
+                        ReactDOM.render(<Portfolio />, document.getElementById('root'));
+    </script>
+</body>
+</html>
